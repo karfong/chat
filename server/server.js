@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from 'cors';
 import http from 'http';
 import { connectDB } from './lib/db.js';
+import userRouter from './routes/userRoutes.js';
 
 
 //create express app and http server setup
@@ -13,7 +14,9 @@ const server = http.createServer(app);
 app.use(express.json({ limit: "4mb" }));
 app.use(cors());
 
+//route setup
 app.use("/api/status", (req, res) => res.send("Server is live"));
+app.use("/api/auth", userRouter);
 
 //connect to mongoDB
 await connectDB();
