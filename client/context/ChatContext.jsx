@@ -29,7 +29,10 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await axios.get(`/api/messages/${userId}`);
       if (data.success) {
-        setMessages(data.messages);
+        const cleanMessages = data.messages.filter(
+          (msg) => msg && msg.senderId && (msg.text || msg.image)
+        );
+        setMessages(cleanMessages);
       }
     } catch (error) {
       toast.error(error.message);
@@ -45,7 +48,7 @@ export const ChatProvider = ({ children }) => {
       );
 
       if (data.success) {
-        setMessages((prevMessages) => [...prevMessages, data.newMessage]);
+        setMessages((prevMessages) => [...prevMessages, data.message]);
       } else {
         toast.error(data.message);
       }

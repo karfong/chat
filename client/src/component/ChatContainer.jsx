@@ -10,7 +10,7 @@ const ChatContainer = () => {
     useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
 
-  const scrollEnd = React.useRef();
+  const scrollEnd = useRef();
 
   const [input, setInput] = useState("");
 
@@ -60,8 +60,7 @@ const ChatContainer = () => {
         />
         <p className="flex-1 text-lg text-white flex items-center gap-2">
           {selectedUser.fullName}
-          {onlineUsers.includes(selectedUser._id)}
-          <span className="w-2 h-2 rounded-full bg-green-500"></span>
+          {onlineUsers.includes(selectedUser._id)}<span className="w-2 h-2 rounded-full bg-green-500"></span>
         </p>
         <img
           onClick={() => setSelectedUser(null)}
@@ -73,11 +72,10 @@ const ChatContainer = () => {
       </div>
       {/* chat area */}
       <div className="flex flex-col h-[calc(100%-120px)] overflow-y-scroll p-3 pb-6">
-        {messages.map((msg, index) => (
+        {messages.filter(msg => msg && msg.senderId).map((msg, index) => (
           <div
             key={index}
-            className={`flex items-end gap-2 justify-end ${
-              msg.senderId !== authUser._id && "flex-row-reverse"
+            className={`flex items-end gap-2 justify-end ${msg.senderId !== authUser._id && "flex-row-reverse"
             }`}
           >
             {msg.image ? (
@@ -122,7 +120,7 @@ const ChatContainer = () => {
           <input
             onChange={(e) => setInput(e.target.value)}
             value={input}
-            onKeyDown={(e) => (e.key === "Enter" ? handleSendMessage(e) : null)}
+            onKeyDown={(e) => e.key === "Enter" ? handleSendMessage(e) : null}
             type="text"
             placeholder="Send a message"
             className="flex-1 text-sm p-3 broder-none rounded-lg outline-none text-white placeholder-gray-400"
